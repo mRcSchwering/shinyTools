@@ -1,0 +1,9 @@
+progress;1
+pid;2016-10-06_21:27_5452
+sessionid;asd
+status;
+pwd;/home/marc/src/mRc_repo/shinyTools/tmp
+ifof;/home/marc/src/mRc_repo/shinyTools/tmp/process2-ifof.rds
+Rscript;/home/marc/src/mRc_repo/shinyTools/scripts/process2.R
+logFile;/home/marc/src/mRc_repo/shinyTools/log/log2.log
+statusFile;/home/marc/src/mRc_repo/shinyTools/tmp/process2-ifof.status

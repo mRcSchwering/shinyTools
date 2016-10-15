@@ -1,0 +1,54 @@
+asd : 
+asd : 
+asd : ########################################
+asd : Starting at 2016-10-06 21:20:51
+asd : 
+asd : ProcessInfo:
+asd : 
+asd : progress;0
+asd : pid;2016-10-06_21:20_0401
+asd : sessionid;asd
+asd : status;
+asd : pwd;/home/marc/src/mRc_repo/shinyTools/tmp
+asd : ifof;/home/marc/src/mRc_repo/shinyTools/tmp/process2-ifof.rds
+asd : Rscript;/home/marc/src/mRc_repo/shinyTools/scripts/process2.R
+asd : logFile;/home/marc/src/mRc_repo/shinyTools/log/log2.log
+asd : statusFile;/home/marc/src/mRc_repo/shinyTools/tmp/process2-ifof.status
+asd : 
+asd : Process finishes at 2016-10-06 21:20:55
+asd : 
+asd : 
+asd : ########################################
+asd : Starting at 2016-10-06 21:21:06
+asd : 
+asd : ProcessInfo:
+asd : 
+asd : progress;0
+asd : pid;2016-10-06_21:21_9063
+asd : sessionid;asd
+asd : status;
+asd : pwd;/home/marc/src/mRc_repo/shinyTools/tmp
+asd : ifof;/home/marc/src/mRc_repo/shinyTools/tmp/process2-ifof.rds
+asd : Rscript;/home/marc/src/mRc_repo/shinyTools/scripts/process2.R
+asd : logFile;/home/marc/src/mRc_repo/shinyTools/log/log2.log
+asd : statusFile;/home/marc/src/mRc_repo/shinyTools/tmp/process2-ifof.status
+asd : 
+asd : Process finishes at 2016-10-06 21:21:10
+asd : 
+asd : 
+asd : ########################################
+asd : Starting at 2016-10-06 21:27:22
+asd : 
+asd : ProcessInfo:
+asd : 
+asd : progress;0
+asd : pid;2016-10-06_21:27_5452
+asd : sessionid;asd
+asd : status;
+asd : pwd;/home/marc/src/mRc_repo/shinyTools/tmp
+asd : ifof;/home/marc/src/mRc_repo/shinyTools/tmp/process2-ifof.rds
+asd : Rscript;/home/marc/src/mRc_repo/shinyTools/scripts/process2.R
+asd : logFile;/home/marc/src/mRc_repo/shinyTools/log/log2.log
+asd : statusFile;/home/marc/src/mRc_repo/shinyTools/tmp/process2-ifof.status
+asd : 
+asd : Process finishes at 2016-10-06 21:27:26

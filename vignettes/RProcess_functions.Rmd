@@ -1,0 +1,121 @@
+---
+title: "RProcess Module Functions"
+subtitle: "R batch scripts from shiny session"
+author: "Marc Schwering"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{RProcess Module Functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+# Contents
+
+1. [Single R batch script](#single)  
+2. [Multiple scripts](#multi)  
+
+
+```{r setup, echo=FALSE, results="hide"}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 7)
+```
+
+<br/><br/>
+
+
+
+# Single R batch script<a name="single"></a>
+
+blabla how it works
+writing files, 1 for ifof, 1 for status
+option to write log file
+pid in case process is started before another finishes
+convenience functions for use in R batch script
+
+## Using `RProcess` <a name="single1"></a>
+
+RProcess small example
+shiny...
+
+
+
+then process...
+
+## Starting and polling Process seperately <a name="single2"></a>
+
+Current directory with subdirectories `./tmp`, `./log`, `./scripts`. 
+Btach R script in `./scripts` called `process.R` with:
+
+```{r, eval = FALSE}
+input <- shinyTools::Init(commandArgs(TRUE))
+
+shinyTools::Log(c("Input is", input))
+Sys.sleep(2)
+
+if(input > 100) shinyTools::Abort("Input greater 100")
+
+info <- shinyTools::Up(0.8)
+
+Sys.sleep(4)
+res <- shinyTools::Try(dpois(1:100, input))
+
+shinyTools::Fin(res)
+```
+
+Then run app, which can run `Rscript ./scripts/process.R`.
+
+```{r, eval=FALSE}
+library(shinyTools)
+
+check <- function(object, add){ if(object <= add$n) return(paste("Lambda must be greater", add$n, "idiot!"))}
+
+ui <- fluidPage(sidebarLayout(
+  sidebarPanel(
+    h2("Distribution"),
+    numericInput("num1", "set lambda", 10, -10, 50),
+    RProcessStartUI("process"),
+    actionButton("trigger", "Start"),
+    helpText("Poisson distribution is created in R batch script with a few seconds delay."),
+    br(),
+    actionButton("num2", "check responsiveness"),
+    verbatimTextOutput("num2"),
+    helpText("By clicking on the button you can see that the app is still responsive while running the R batch script.")
+  ),
+  mainPanel(
+    h3("Poisson Distribution"), 
+    RProcessFinishUI("process"), 
+    plotOutput("plot"), 
+    h3("Return value of RProcessFinish"),
+    verbatimTextOutput("result")
+  )
+))
+
+server <-function(input, output, session) {
+  callModule(RProcessStart, "process", trigger = reactive(input$trigger), object = reactive(input$num1),
+             script = "./scripts/process.R", logFile = "log/log.log", pwd = "./tmp", sessionid = "asd",
+             checkFun = "check", addArgs = list(n = 0))
+  result <- callModule(RProcessFinish, "process", pwd = "./tmp")
+  output$plot <- renderPlot(plot(1:100, result()$result))
+  output$result <- renderPrint(result())
+  output$num2 <- renderPrint(input$num2)
+}
+
+shinyApp(ui, server)
+```
+
+Same thing.
+
+<br/><br/>
+
+# Multiple scripts<a name="multi"></a>
+
+
+
+
+
+
+
+
+
+
