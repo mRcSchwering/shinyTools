@@ -28,8 +28,8 @@ server <-function(input, output, session) {
              checkFun = "check", addArgs = list(n = 0))
   result1 <- callModule(RProcessFinish, "process1", pwd = "./tmp")
   result2 <- callModule(RProcessFinish, "process2", pwd = "./tmp")
-  output$plot1 <- renderPlot(plot(1:100, result1()$result))
-  output$plot2 <- renderPlot(plot(1:100, result2()$result))
+  output$plot1 <- renderPlot(if(is.null(result1()$result)) NULL else plot(1:100, result1()$result))
+  output$plot2 <- renderPlot(if(is.null(result2()$result)) NULL else plot(1:100, result2()$result))
 }
 
 shinyApp(ui, server)

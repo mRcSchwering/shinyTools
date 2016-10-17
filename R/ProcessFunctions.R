@@ -470,8 +470,8 @@ Start <- function( id, script,
   info2 <- info
   info2$progress <- 0
   info2$ifof <- file.path(info2$pwd, paste0(id, "-ifof.rds"))
-  info2$Rscript <- script #"/home/marc/src/mRc_repo/shinyTools/scripts/process2.R" # muss absolut path oder von pwd aus
-  info2$logFile <- logFile #"/home/marc/src/mRc_repo/shinyTools/log/log2.log" # muss absolut path oder von pwd aus
+  info2$Rscript <- script
+  info2$logFile <- logFile
   info2$statusFile <- file.path(info2$pwd, paste0(id, "-ifof.status"))
 
   # write log if pid valid
