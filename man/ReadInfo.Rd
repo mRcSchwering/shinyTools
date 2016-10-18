@@ -10,33 +10,68 @@ ReadInfo(statusFile)
 \item{statusFile}{chr path to relevant *.status file}
 }
 \value{
-list of class ProcessInfo.
-        This list contains information about the current process and is used by other functions of this module.
+list of vectors of class ProcessInfo.
+        This list contains information about the current process and is used by other Rscript communication functions.
 }
 \description{
-Read content of a *.status file and return it as list of class ProcessInfo.
-For creating the ProcessInfo object initially in a R script it is better to use \code{\link{RProcessInit}}.
-It uses this function but also takes care of some other stuff.
-}
-\details{
-The *.status file is used to communicate with the shiny session.
-Each line in the file is translated into a list element with several entries seperated by ";".
-The first entry is used as the element name, the following ones are its values.
-
-By using the functions \code{\link{Init}}, \code{\link{Up}}, \code{\link{Log}}, \code{\link{Try}},
-\code{\link{Fin}} it is ensured that the communication bewteen shiny session and R batch script work and
-that no files are falsly overwritten.
-}
-\examples{
-
+ReadInfo
 }
 \seealso{
-Other RProcess module functions: \code{\link{Abort}},
-  \code{\link{Fin}}, \code{\link{Init}}, \code{\link{Log}},
-  \code{\link{RProcessFinishUI}},
-  \code{\link{RProcessFinish}},
-  \code{\link{RProcessStartUI}},
-  \code{\link{RProcessStart}}, \code{\link{Start}},
-  \code{\link{Try}}, \code{\link{Up}}
+These Rscript communication functions are used in R scripts started by a RProcess module such as \code{\link{RProcess}}.
+         For some examples on how they work together see the vignette \emph{RProcess Module Functions}.
+
+Other Rscript communication functions: \code{\link{Rscript_Abort}},
+  \code{\link{Rscript_Fin}}, \code{\link{Rscript_Init}},
+  \code{\link{Rscript_Log}}, \code{\link{Rscript_Start}},
+  \code{\link{Rscript_Try}}, \code{\link{Rscript_Up}}
 }
+\keyword{";".}
+\keyword{*.status}
+\keyword{Each}
+\keyword{ProcessInfo.}
+\keyword{Read}
+\keyword{Rscript}
+\keyword{The}
+\keyword{This}
+\keyword{\code{*.status}}
+\keyword{a}
+\keyword{and}
+\keyword{are}
+\keyword{as}
+\keyword{by}
+\keyword{class}
+\keyword{communicate}
+\keyword{communication}
+\keyword{content}
+\keyword{different}
+\keyword{element}
+\keyword{entries}
+\keyword{entry}
+\keyword{file}
+\keyword{first}
+\keyword{following}
+\keyword{function}
+\keyword{functions.}
+\keyword{in}
+\keyword{internal}
+\keyword{into}
+\keyword{is}
+\keyword{it}
+\keyword{its}
+\keyword{line}
+\keyword{list}
+\keyword{name,}
+\keyword{of}
+\keyword{ones}
+\keyword{return}
+\keyword{seperated}
+\keyword{session.}
+\keyword{several}
+\keyword{shiny}
+\keyword{the}
+\keyword{to}
+\keyword{translated}
+\keyword{used}
+\keyword{values.}
+\keyword{with}
 

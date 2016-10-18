@@ -29,8 +29,46 @@ knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 7)
 
 ## Simple Example <a name="single1"></a>
 
-RProcess small example
-shiny...
+Have a file `process.R` in the current working directory which looks like this:
+
+```{r, eval=FALSE}
+# read input and info about process, report to app that it started
+input <- shinyTools::Rscript_Init(commandArgs(TRUE))
+
+# do stuff
+Sys.sleep(4)
+res <- shinyTools::Rscript_Try(dpois(1:100, input))
+
+# finish return result to shiny session
+shinyTools::Rscript_Fin(res)
+```
+
+Then, start an app like this:
+
+```{r, eval=FALSE}
+library(shinyTools)
+
+ui <- fluidPage(sidebarLayout(
+  sidebarPanel(
+    h2("Distribution"),
+    numericInput("num1", "set lambda", 10, -10, 50),
+    RProcessUI("process"),
+    actionButton("trigger", "Start"),
+    helpText("Poisson distribution is created in R batch script with a few seconds delay.")
+  ),
+  mainPanel(
+    h3("Poisson Distribution"),
+    plotOutput("plot")
+  )
+))
+
+server <-function(input, output, session) {
+  result <- callModule(RProcess, "process", trigger = reactive(input$trigger), object = reactive(input$num1), script = "./process.R")
+  output$plot <- renderPlot(if(is.null(result()$result)) NULL else plot(1:100, result()$result))
+}
+
+shinyApp(ui, server)
+```
 
 ## How it works
 
@@ -46,37 +84,39 @@ When the R script has finished this file is overwritten to hand over the output 
 
 #### Functions for the R Script
 
-At the beginning, the R script must read the status file. This should be done with the function `Init`.
+At the beginning, the R script must read the status file. This should be done with the function `Rscript_Init`.
 It will create an object `info` in the global environment.
 This object contains the information of the status file and it will be used by other `RProcess` functions.
-For writing a log or sending a status update (like 40\% or so) to the shiny session functions `Log` and `Up` can be used.
-At the very end of the R script, the `Fin` function should be used which signals the shiny session that the R script has finished.
+For writing a log or sending a status update (like 40\% or so) to the shiny session functions `Rscript_Log` and `Rscript_Up` can be used.
+At the very end of the R script, the `Rscript_Fin` function should be used which signals the shiny session that the R script has finished.
 All the outputs are written and the R session is quit.
-There is also a function -- `Try` -- which can be used for stuff that might produce an error.
+There is also a function -- `Rscript_Try` -- which can be used for stuff that might produce an error.
 If the R script runs into an error and quits the shiny session will never know about it.
-`Try` just makes sure that the shiny session is informed about that with some kind of error message.
+`Rscript_Try` just makes sure that the shiny session is informed about that with some kind of error message.
 See the documentation for further details on these functions.
 
 Note that there is a process id which is generated when starting a process with `RProcess`.
 It has the effect that if a process is started a second time before the first process has finished, the older process will quit.
-The functions `Init`, `Log`, `Up`, `Try`, `Fin` all check whether they are still the *newest* process before they write anything.
+The functions `Rscript_Init`, `Rscript_Log`, `Rscript_Up`, `Rscript_Try`, `Rscript_Fin` all check whether they are still the *newest* process before they write anything.
 
 #### Directories and Logs
 
-If you read the documentation for `RProcessStart` you will see that there can be several directories.
+If you read the documentation for `RProcess` you will see that there can be several directories.
 Basically, the R script can be in any directory (argument `script`), the process will always run in the directory defined as `pwd`.
-The R script will set its working directory to `pwd` with the call to `Init`.
+The R script will set its working directory to `pwd` with the call to `Rscript_Init`.
 This is also where the `.status` and `.rds` files are read and written.
 
 There is the option to write log files by defining a file with `logFile`.
 If this is set some logs are written by default, e.g. starting and finishing the R script.
-Otherwise use the `Log` function to write something in there.
+Otherwise use the `Rscript_Log` function to write something in there.
 If you have several users you might want to use the argument `sessionid` which will give every log entry a prefix.
 This way you can distinguish different sessions in the log file later on.
 
 ## Starting and polling Process seperately <a name="single2"></a>
 
 To show the mechanics we now start and poll the process seperately. 
+`RProcess` is just a convenience function which does both at once.
+It calls `RProcessStart`, which can do a quality check and then start the R script, and `RProcessFinish`, which looks at the status file and reacts to it if it changes.
 Here, we also make use of different directories, a check function, log files and a session ID.
 
 To run the script create subdirectories `./tmp`, `./log`, `./scripts` in the current directory.
@@ -85,22 +125,24 @@ It is called `process.R` and looks like this:
 
 ```{r, eval = FALSE}
 # process.R
-input <- shinyTools::Init(commandArgs(TRUE))
+input <- shinyTools::Rscript_Init(commandArgs(TRUE))
 
-shinyTools::Log(c("Input is", input))
+shinyTools::Rscript_Log(c("Input is", input))
 Sys.sleep(2)
 
-if(input > 100) shinyTools::Abort("Input greater 100")
+if(input > 100) shinyTools::Rscript_Abort("Input greater 100")
 
-info <- shinyTools::Up(0.8)
+info <- shinyTools::Rscript_Up(0.8)
 
 Sys.sleep(4)
-res <- shinyTools::Try(dpois(1:100, input))
+res <- shinyTools::Rscript_Try(dpois(1:100, input))
 
-shinyTools::Fin(res)
+shinyTools::Rscript_Fin(res)
 ```
 
-Then, start the following app from the current directory.
+The function `Rscript_Abort` terminates the R script and sends its argument as an error message to the shiny session.
+This can be used to do quality checks in the R script.
+The app below is started from the current directory.
 
 ```{r, eval=FALSE}
 library(shinyTools)
@@ -142,7 +184,9 @@ shinyApp(ui, server)
 ```
 
 `RProcessStart` and `RProcessFinish` must both be called with the same id, so that `RProcessFinish` will look for the correct `.status` and `.rds` files.
-
+You can provoke the check function by using a lambda smaller 0 or force the script to stop with an error by using a labmda greater 100.
+The error messages are displayed in two different locations (sidebarPanel, mainPanel).
+If `RProcess` is used they are both in the same place.
 
 <br/><br/>
 
@@ -154,28 +198,28 @@ This way the user can already check out partial results while the process is sti
 
 To run the script create subdirectories `./tmp`, `./log`, `./scripts` in the current directory.
 Now, there are two R scripts in `./scripts` called `process1.R` and `process2.R`.
-Process 1 will start process 2 using the `Start` function.
+Process 1 will start process 2 using the `Rscript_Start` function.
 
 ```{r, eval=FALSE}
 # process1.R
-input <- shinyTools::Init(commandArgs(TRUE))
+input <- shinyTools::Rscript_Init(commandArgs(TRUE))
 Sys.sleep(4)
-res <- shinyTools::Try(dpois(1:100, input))
-shinyTools::Start("process2", "/absolute/path/to/scripts/process2.R",
+res <- shinyTools::Rscript_Try(dpois(1:100, input))
+shinyTools::Rscript_Start("process2", "/absolute/path/to/scripts/process2.R",
       logFile = "/absolute/path/to/log/log2.log")
-shinyTools::Fin(res)
+shinyTools::Rscript_Fin(res)
 ```
 
 **Process 1** is started with id `process1` and its results can be retrieved using this id.
-But before finishing with the `Fin` function process 1 starts another R script using id `process2`.
+But before finishing with the `Rscript_Fin` function process 1 starts another R script using id `process2`.
 Note, script and log path must be given absolute or relative from the working directory of `process1`.
 
 ```{r, eval=FALSE}
 # process2.R
-input <- shinyTools::Init(commandArgs(TRUE))
+input <- shinyTools::Rscript_Init(commandArgs(TRUE))
 Sys.sleep(4)
-res <- shinyTools::Try(dnorm(1:100, input, 10))
-shinyTools::Fin(res)
+res <- shinyTools::Rscript_Try(dnorm(1:100, input, 10))
+shinyTools::Rscript_Fin(res)
 ```
 
 **Process 2** is then running with id `process2` and its results can be retrieved using this id.

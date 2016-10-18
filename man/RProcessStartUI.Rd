@@ -27,11 +27,9 @@ The 2 files are prefixed with the module id.
 
 }
 \seealso{
-Other RProcess module functions: \code{\link{Abort}},
-  \code{\link{Fin}}, \code{\link{Init}}, \code{\link{Log}},
-  \code{\link{RProcessFinishUI}},
+Other RProcess module functions: \code{\link{RProcessFinishUI}},
   \code{\link{RProcessFinish}},
-  \code{\link{RProcessStart}}, \code{\link{ReadInfo}},
-  \code{\link{Start}}, \code{\link{Try}}, \code{\link{Up}}
+  \code{\link{RProcessStart}}, \code{\link{RProcessUI}},
+  \code{\link{RProcess}}
 }
 

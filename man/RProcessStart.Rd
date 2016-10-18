@@ -56,11 +56,9 @@ Additional argumets can be handed over to checkFun via the list addArgs.
 
 }
 \seealso{
-Other RProcess module functions: \code{\link{Abort}},
-  \code{\link{Fin}}, \code{\link{Init}}, \code{\link{Log}},
-  \code{\link{RProcessFinishUI}},
+Other RProcess module functions: \code{\link{RProcessFinishUI}},
   \code{\link{RProcessFinish}},
-  \code{\link{RProcessStartUI}}, \code{\link{ReadInfo}},
-  \code{\link{Start}}, \code{\link{Try}}, \code{\link{Up}}
+  \code{\link{RProcessStartUI}}, \code{\link{RProcessUI}},
+  \code{\link{RProcess}}
 }
 
