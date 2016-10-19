@@ -10,40 +10,29 @@ Rscript_Fin(output, log = paste("Process finishes at", Sys.time()),
 \arguments{
 \item{output}{object which will be handed over back to shiny session}
 
-\item{log}{chr arr used as initial log entry for this process. Each element is a line.}
+\item{log}{\code{chr} arr used as log entry for this process (\code{paste("Process finishes at", Sys.time())}). Each element is a line.}
 
-\item{info}{ProcessInfo object or NULL (NULL).
+\item{info}{\emph{ProcessInfo} object or \code{NULL} (\code{NULL}).
 This is a list of relevant information about the process.
-It can be created with \code{\link{RProcessInit}}.
-If NULL the global environment is searched for an object of class ProcessInfo.}
+It can be created with \code{\link{Rscript_Init}}.
+If \code{NULL} the global environment is searched for an object of class \emph{ProcessInfo}.}
 }
 \description{
-This function is used to write log messages for a R script run by a RProcess module such as \code{\link{RProcess}}.
+This function is used finish a R script run by a RProcess module such as \code{\link{RProcess}}.
+It should be the last command of the script since it writes an output file, tells the shiny session about it,
+and ends the R session with a call to \code{quit}.
 }
 \details{
-This is a convenience function for a R batch script started by a shiny session with the RProcess module.
-It should be the last command of a script since it writes an output file and send a termination singal.
-
 The output will overwrite the input file used by the same R script.
-By setting the progress to 1, the shiny session knows that this R script has finished.
-It will then read the output file. The script quits itself.
+By setting progress to 1 in the \code{*.status} file, the shiny session knows that this R script has finished.
+It will then read the output file.
 
-The communication happens via a *.status file.
-Information provided by RProcess module is handed over to the R batch process via this file.
-Conversely the R batch process writes on this file to hand over status updates to the shiny session.
-By using the functions \code{\link{Rscript_Init}}, \code{\link{Rscript_Up}}, \code{\link{Rscript_Log}}, \code{\link{Rscript_Try}},
-\code{\link{Rscript_Fin}} it is ensured that the communication bewteen shiny session and R batch script work and
-that no files are falsly overwritten.
-
-If a log file exists, it is appended by the lines defined with log. Each element of log is a line.
-Information about path of the log file, the session id and the process id is taken from the ProcessInfo object.
-If a session id exists, every line is prefixed with it.
-If a process id exists, before writing anything the loaded process id is compared with the current one -- read from the *.status file.
-If they do not match, quit() is run.
+For correct communication with the shiny session an \emph{ProcessInfo} object given (argument \code{info}).
+If a log file exists, it is appended with the message given in argument \code{log}. Each element is a line.
+If a session id exists the log is prefixed with it.
+If a process id exists, before writing anything the loaded process id is compared with the current one -- read from the \code{*.status} file.
+If they do not match the R session ends with a call to \code{quit}.
 This ensures that, in case a newer version of the same process is running, the current one will quit and not overwrite anything.
-}
-\examples{
-
 }
 \seealso{
 These Rscript communication functions are used in R scripts started by a RProcess module such as \code{\link{RProcess}}.

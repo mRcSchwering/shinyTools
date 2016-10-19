@@ -50,12 +50,20 @@ Thereby the module will start the R batch script.
 If the input should not be valid, the function must return a character value.
 This chr value will be rendered as a error message for the user, and the modul will not start the R batch script.
 
-Additional argumets can be handed over to checkFun via the list addArgs.
+This module starts and then observes a custom R script.
+ The communication between the shiny session and the R script is done via a \code{*.status} file.
+ Input and output are handed via a \code{*.rds} file.
+
+To ensure that the communication between the shiny session and the R script is working properly, use \code{\link{Rscript_Init}}
+ to start the script and \code{\link{Rscript_Fin}} to finish it.
 }
 \examples{
 
 }
 \seealso{
+For further information see the documentation of Rscript communication such as \code{\link{Rscript_Init}}.
+         Examples can be found in the vignette \emph{RProcess Module Functions}.
+
 Other RProcess module functions: \code{\link{RProcessFinishUI}},
   \code{\link{RProcessFinish}},
   \code{\link{RProcessStartUI}}, \code{\link{RProcessUI}},

@@ -8,8 +8,19 @@
 #' These files are used for communication between both processes and they are written into the directory defined as 'pwd'.
 #' The 2 files are prefixed with the module id.
 #'
+#'  This module starts and then observes a custom R script.
+#'  The communication between the shiny session and the R script is done via a \code{*.status} file.
+#'  Input and output are handed via a \code{*.rds} file.
+#'
+#'  To ensure that the communication between the shiny session and the R script is working properly, use \code{\link{Rscript_Init}}
+#'  to start the script and \code{\link{Rscript_Fin}} to finish it.
+#'  These functions belong to the Rscript communication function which should be used in the R script for communication with the shiny session.
+#'  For examples see the vignette on \emph{RProcess Module Functions}
 #'
 #' @family RProcess module functions
+#'
+#' @seealso For further information see the documentation of Rscript communication such as \code{\link{Rscript_Init}}.
+#'          Examples can be found in the vignette \emph{RProcess Module Functions}.
 #'
 #' @param id        chr id of this object for shiny session
 #'
@@ -28,43 +39,42 @@ RProcessFinishUI <- function(id) {
 
 #' RProcessFinish
 #'
-#' This is a process starter for R batch processes which are started from the shiny session, but should run in the background.
-#' This is useful for things that take a while to compute. The app stays responsive while the batch process is running.
+#'  This module observes a custom R script.
+#'  Together with \code{\link{RProcessStart}} this module can start and observe a custom R script as background process.
+#'  Both functions are combined in a convenience function \code{\link{RProcess}}.
 #'
-#' An R object can be passed through to a R batch script which will be started with 'Rscript'.
-#' This object and information about the R batch script are saved as an *.rds and an *.status file.
-#' These files are used for communication between both processes and they are written into the directory defined as 'pwd'.
-#' The process is started with a reactive 'trigger'.
+#'  If this function is used together with \code{\link{RProcessStart}}, they both need to be called with the same \code{id}
+#'  and the same \code{pwd} (working directory).
+#'  Otherwise the communication bewteen R script and shiny session will not work.
 #'
-#' With argument checkFun a function name can be defined which will be used as quality control for 'object'.
-#' This function is run before the R batch script is started.
-#' First argument of this function is the 'object' handed over to RProcessStart.
-#' The function must either return NULL or a chr value. NULL means the input is valid.
-#' Thereby the module will start the R batch script.
-#' If the input should not be valid, the function must return a character value.
-#' This chr value will be rendered as a error message for the user, and the modul will not start the R batch script.
+#'  The communication between the shiny session and the R script is done via a \code{*.status} file.
+#'  Input and output are handed over via a \code{*.rds} file.
+#'  The working directory of the process can be defined with \code{pwd}.
+#'  This is where the files are read and written as well.
 #'
-#' Additional argumets can be handed over to checkFun via the list addArgs.
+#'  To ensure that the communication between the shiny session and the R script is working properly, use \code{\link{Rscript_Init}}
+#'  to start the script and \code{\link{Rscript_Fin}} to finish it.
+#'  These functions belong to the Rscript communication function which should be used in the R script for communication with the shiny session.
+#'  For examples see the vignette on \emph{RProcess Module Functions}
 #'
 #' @family RProcess module functions
+#'
+#' @seealso For further information see the documentation of Rscript communication such as \code{\link{Rscript_Init}}.
+#'          Examples can be found in the vignette \emph{RProcess Module Functions}.
 #'
 #' @param input      argument used by shiny session
 #' @param output     argument used by shiny session
 #' @param session    argument used by shiny session
-#' @param trigger    reactive which starts the process (e.g. action button input)
-#' @param object     reactive object that will be handed over to R batch script as input
-#' @param script     chr path to R batch script (name of file included)
-#' @param logFile    chr or NULL (NULL) path of (desired) logging file (name included)
-#' @param sessionid  chr or NULL (NULL) id for the session. Log entries will be prefixed with it.
 #' @param pwd        chr (getwd()) path of R batch process working directory.
-#'                   That's where intermediate files will appear as well.
-#' @param checkFun   chr or NULL (NULL) if not NULL name of a function which can be used as a quality check for object
-#'                   right before it is handed ober to the R batch script
-#' @param addArgs    list or NULL (NULL) if not NULL list of additional arguments which will be passed to checkFun
+#' @param millis     \code{int} (1000) of the time interval in milli seconds in which to read the \code{*.status} file for possible changes
 #'
-#' @return NULL
-#'
-#' @examples
+#' @return \emph{list} with elements 4 elements
+#' \itemize{
+#'   \item \emph{finished} indicating the time at which the R script has finished (\code{NULL} if not finished yet)
+#'   \item \emph{result} the actual output of the R script (\code{NULL} if not finished yet)
+#'   \item \emph{error} if the R script finished with an error, a relevant message is given here as \code{chr} (\code{NULL} if no error occured)
+#'   \item \emph{progress} \code{num} indicating progress of R script (1 if finished, [0,1[ if running, \code{NULL} otherwise)
+#' }
 #'
 #' @export
 #'

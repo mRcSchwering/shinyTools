@@ -14,7 +14,7 @@ Rscript_Up(progress, log = paste("Progress update to", progress),
 
 \item{info}{\emph{ProcessInfo} object or \code{NULL} (\code{NULL}).
 This is a list of relevant information about the process.
-It can be created with \code{\link{RProcessInit}}.
+It can be created with \code{\link{Rscript_Init}}.
 If NULL the global environment is searched for an object of class \emph{ProcessInfo}.}
 }
 \value{
@@ -29,8 +29,8 @@ A progess update might be used by a RProcess module in the shiny session to prov
 In addition, a log entry about the progress update is written in case a log file was defined.
 This information is taken from the \emph{ProcessInfo} object.
 
-If a log file exists, it is appended by the lines defined with log. Each element of log is a line.
 Information about path of the log file, the session id and the process id is taken from the \emph{ProcessInfo} object.
+If a log file exists, it is appended by the lines defined with log. Each element of log is a line.
 If a session id exists, every line is prefixed with it.
 If a process id exists, before writing anything the loaded process id is compared with the current one -- read from the \code{*.status} file.
 If they do not match the R session ends with a call to \code{quit}.

@@ -22,11 +22,21 @@ An R object can be passed through to a R batch script which will be started with
 This object and information about the R batch script are saved as an *.rds and an *.status file.
 These files are used for communication between both processes and they are written into the directory defined as 'pwd'.
 The 2 files are prefixed with the module id.
+
+This module starts and then observes a custom R script.
+ The communication between the shiny session and the R script is done via a \code{*.status} file.
+ Input and output are handed via a \code{*.rds} file.
+
+To ensure that the communication between the shiny session and the R script is working properly, use \code{\link{Rscript_Init}}
+ to start the script and \code{\link{Rscript_Fin}} to finish it.
 }
 \examples{
 
 }
 \seealso{
+For further information see the documentation of Rscript communication such as \code{\link{Rscript_Init}}.
+         Examples can be found in the vignette \emph{RProcess Module Functions}.
+
 Other RProcess module functions: \code{\link{RProcessFinishUI}},
   \code{\link{RProcessFinish}},
   \code{\link{RProcessStart}}, \code{\link{RProcessUI}},

@@ -9,42 +9,28 @@ Rscript_Try(expr, ignore = FALSE, info = NULL)
 \arguments{
 \item{expr}{R expression to be evaluated}
 
-\item{ignore}{bool (FALSE) whether the script should continue after an error occured}
+\item{ignore}{\code{bool} (\code{FALSE}) whether the script should continue after an error occured}
 
-\item{info}{ProcessInfo object or NULL (NULL).
+\item{info}{\emph{ProcessInfo} object or \code{NULL} (\code{NULL}).
 This is a list of relevant information about the process.
-It can be created with \code{\link{RProcessInit}}.
-If NULL the global environment is searched for an object of class ProcessInfo.}
+It can be created with \code{\link{Rscript_Init}}.
+If NULL the global environment is searched for an object of class \emph{ProcessInfo}.}
 }
 \value{
-NULL (if error occured) or result of evaluated expr
+\code{NULL} (if error occured) or result of evaluated expr
 }
 \description{
-This function is used to write log messages for a R script run by a RProcess module such as \code{\link{RProcess}}.
+This function is used to recover an error in a R script run by a RProcess module such as \code{\link{RProcess}}.
+In general, if the R script runs into an error its shiny session will never know about it.
+This functions, reports this error to the shiny session and writes a log if desired.
 }
 \details{
-A convenience function for wrapping an expression in try and recovering from an error.
-
-This is intended for use in an R batch script if it was started by a shiny session using the RProcess module.
-If the batch script stops because of some error, the shiny session will never know about this.
-By wrapping an error-prone expression in this function, a signal that the script failed is given to the shiny session (if ignore = FALSE).
-If a log file exists, an entry is made.
-This information is taken from the ProcessInfo object.
-
-The communication happens via a *.status file.
-Information provided by RProcess module is handed over to the R batch process via this file.
-Conversely the R batch process writes on this file to hand over status updates to the shiny session.
-By using the functions \code{\link{Rscript_Init}}, \code{\link{Rscript_Up}}, \code{\link{Rscript_Log}}, \code{\link{Rscript_Try}},
-\code{\link{Rscript_Fin}} it is ensured that the communication bewteen shiny session and R batch script work and
-that no files are falsly overwritten.
-
-If a session id exists, the log message is prefixed with it.
-If a process id exists, before writing anything the loaded process id is compared with the current one -- read from the *.status file.
-If they do not match, quit() is run.
+For correct communication with the shiny session an \emph{ProcessInfo} object given (argument \code{info}).
+If a log file exists, it is appended with the error message.
+If a session id exists the log is prefixed with it.
+If a process id exists, before writing anything the loaded process id is compared with the current one -- read from the \code{*.status} file.
+If they do not match the R session ends with a call to \code{quit}.
 This ensures that, in case a newer version of the same process is running, the current one will quit and not overwrite anything.
-}
-\examples{
-
 }
 \seealso{
 These Rscript communication functions are used in R scripts started by a RProcess module such as \code{\link{RProcess}}.

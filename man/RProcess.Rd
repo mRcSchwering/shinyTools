@@ -19,44 +19,45 @@ RProcess(input, output, session, trigger, object, script, logFile = NULL,
 
 \item{object}{reactive object that will be handed over to R batch script as input}
 
-\item{script}{chr path to R batch script (name of file included)}
+\item{script}{\code{chr} path to R batch script (name of file included)}
 
-\item{logFile}{chr or NULL (NULL) path of (desired) logging file (name included)}
+\item{logFile}{\code{chr} or \code{NULL} (\code{NULL}) path of (desired) logging file (name included)}
 
-\item{sessionid}{chr or NULL (NULL) id for the session. Log entries will be prefixed with it.}
+\item{sessionid}{\code{chr} or \code{NULL} (\code{NULL}) id for the session. Log entries will be prefixed with it.}
 
-\item{pwd}{chr (getwd()) path of R batch process working directory.
+\item{pwd}{\code{chr} (\code{getwd()}) path of R batch process working directory.
 That's where intermediate files will appear as well.}
 
-\item{checkFun}{chr or NULL (NULL) if not NULL name of a function which can be used as a quality check for object
+\item{checkFun}{\code{chr} or \code{NULL} (\code{NULL}) if not \code{NULL} name of a function which can be used as a quality check for object
 right before it is handed ober to the R batch script}
 
-\item{addArgs}{list or NULL (NULL) if not NULL list of additional arguments which will be passed to checkFun}
+\item{addArgs}{\code{list} or \code{NULL} (\code{NULL}) if not NULL list of additional arguments which will be passed to checkFun}
+
+\item{millis}{\code{int} (1000) of the time interval in milli seconds in which to read the \code{*.status} file for possible changes}
+}
+\value{
+\emph{list} with elements 4 elements
+\itemize{
+  \item \emph{finished} indicating the time at which the R script has finished (\code{NULL} if not finished yet)
+  \item \emph{result} the actual output of the R script (\code{NULL} if not finished yet)
+  \item \emph{error} if the R script finished with an error, a relevant message is given here as \code{chr} (\code{NULL} if no error occured)
+  \item \emph{progress} \code{num} indicating progress of R script (1 if finished, [0,1[ if running, \code{NULL} otherwise)
+}
 }
 \description{
-This is a process starter for R batch processes which are started from the shiny session, but should run in the background.
-This is useful for things that take a while to compute. The app stays responsive while the batch process is running.
+This module starts and then observes a custom R script as a background process.
+ The app stays responsive while the R script is running.
+ The communication between the shiny session and the R script is done via a \code{*.status} file.
+ Input and output are handed via a \code{*.rds} file.
 }
 \details{
-An R object can be passed through to a R batch script which will be started with 'Rscript'.
-This object and information about the R batch script are saved as an *.rds and an *.status file.
-These files are used for communication between both processes and they are written into the directory defined as 'pwd'.
-The process is started with a reactive 'trigger'.
-
-With argument checkFun a function name can be defined which will be used as quality control for 'object'.
-This function is run before the R batch script is started.
-First argument of this function is the 'object' handed over to RProcessStart.
-The function must either return NULL or a chr value. NULL means the input is valid.
-Thereby the module will start the R batch script.
-If the input should not be valid, the function must return a character value.
-This chr value will be rendered as a error message for the user, and the modul will not start the R batch script.
-
-Additional argumets can be handed over to checkFun via the list addArgs.
-}
-\examples{
-
+To ensure that the communication between the shiny session and the R script is working properly, use \code{\link{Rscript_Init}}
+ to start the script and \code{\link{Rscript_Fin}} to finish it.
 }
 \seealso{
+For further information see the documentation of Rscript communication such as \code{\link{Rscript_Init}}.
+         Examples can be found in the vignette \emph{RProcess Module Functions}.
+
 Other RProcess module functions: \code{\link{RProcessFinishUI}},
   \code{\link{RProcessFinish}},
   \code{\link{RProcessStartUI}},
