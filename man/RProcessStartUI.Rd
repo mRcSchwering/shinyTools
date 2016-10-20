@@ -13,29 +13,21 @@ RProcessStartUI(id)
 chr HTML for creating ui elements.
 }
 \description{
-UI part of a start module for R batch processes. The UI is only an error message which appears only if an error happened.
+UI part of a start module for R scripts which are stared as background processes by the shiny session.
+The UI is a red text field which appears as an error message if the quality check found an error when starting the script.
 }
 \details{
-This is a process starter for R batch processes which are started from the shiny session, but should run in the background.
-This is useful for things that take a while to compute. The app stays responsive while the batch process is running.
-An R object can be passed through to a R batch script which will be started with 'Rscript'.
-This object and information about the R batch script are saved as an *.rds and an *.status file.
-These files are used for communication between both processes and they are written into the directory defined as 'pwd'.
-The 2 files are prefixed with the module id.
-
-This module starts and then observes a custom R script.
- The communication between the shiny session and the R script is done via a \code{*.status} file.
- Input and output are handed via a \code{*.rds} file.
-
-To ensure that the communication between the shiny session and the R script is working properly, use \code{\link{Rscript_Init}}
- to start the script and \code{\link{Rscript_Fin}} to finish it.
+For more details see the documentation of the corresponding \code{\link{RProcessStart}} function.
 }
 \examples{
 
 }
 \seealso{
-For further information see the documentation of Rscript communication such as \code{\link{Rscript_Init}}.
-         Examples can be found in the vignette \emph{RProcess Module Functions}.
+Seome examples on how to use RProcess module functions are given in the vignette \emph{RProcess Module Functions}
+         (\code{vignette("RProcess_functions", package = "shinyTools")})
+
+In the R script communications functions such as \code{\link{Rscript_Init}} and \code{\link{Rscript_Fin}} should be used
+         to ensure correct communication between the R script and the shiny session.
 
 Other RProcess module functions: \code{\link{RProcessFinishUI}},
   \code{\link{RProcessFinish}},

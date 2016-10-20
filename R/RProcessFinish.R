@@ -1,26 +1,17 @@
 #' RProcessFinishUI
-#' UI part of a start module for R batch processes. The UI is only an error message which appears only if an error happened.
 #'
-#' This is a process starter for R batch processes which are started from the shiny session, but should run in the background.
-#' This is useful for things that take a while to compute. The app stays responsive while the batch process is running.
-#' An R object can be passed through to a R batch script which will be started with 'Rscript'.
-#' This object and information about the R batch script are saved as an *.rds and an *.status file.
-#' These files are used for communication between both processes and they are written into the directory defined as 'pwd'.
-#' The 2 files are prefixed with the module id.
+#' This is the UI part of a module to observe R scripts which are running as background processes from the shiny session.
+#' It consists of only a red text field which will be visible as an error message if something during script execution went wrong.
 #'
-#'  This module starts and then observes a custom R script.
-#'  The communication between the shiny session and the R script is done via a \code{*.status} file.
-#'  Input and output are handed via a \code{*.rds} file.
-#'
-#'  To ensure that the communication between the shiny session and the R script is working properly, use \code{\link{Rscript_Init}}
-#'  to start the script and \code{\link{Rscript_Fin}} to finish it.
-#'  These functions belong to the Rscript communication function which should be used in the R script for communication with the shiny session.
-#'  For examples see the vignette on \emph{RProcess Module Functions}
+#' For more details see the documentation of the corresponding \code{\link{RProcessFinish}} function.
 #'
 #' @family RProcess module functions
 #'
-#' @seealso For further information see the documentation of Rscript communication such as \code{\link{Rscript_Init}}.
-#'          Examples can be found in the vignette \emph{RProcess Module Functions}.
+#' @seealso Seome examples on how to use RProcess module functions are given in the vignette \emph{RProcess Module Functions}
+#'          (\code{vignette("RProcess_functions", package = "shinyTools")})
+#'
+#' @seealso In the R script communications functions such as \code{\link{Rscript_Init}} and \code{\link{Rscript_Fin}} should be used
+#'          to ensure correct communication between the R script and the shiny session.
 #'
 #' @param id        chr id of this object for shiny session
 #'
@@ -45,7 +36,6 @@ RProcessFinishUI <- function(id) {
 #'
 #'  If this function is used together with \code{\link{RProcessStart}}, they both need to be called with the same \code{id}
 #'  and the same \code{pwd} (working directory).
-#'  Otherwise the communication bewteen R script and shiny session will not work.
 #'
 #'  The communication between the shiny session and the R script is done via a \code{*.status} file.
 #'  Input and output are handed over via a \code{*.rds} file.
@@ -55,12 +45,15 @@ RProcessFinishUI <- function(id) {
 #'  To ensure that the communication between the shiny session and the R script is working properly, use \code{\link{Rscript_Init}}
 #'  to start the script and \code{\link{Rscript_Fin}} to finish it.
 #'  These functions belong to the Rscript communication function which should be used in the R script for communication with the shiny session.
-#'  For examples see the vignette on \emph{RProcess Module Functions}
+#'  For examples see the vignette on \emph{RProcess Module Functions} (\code{vignette("RProcess_functions", package = "shinyTools")}).
 #'
 #' @family RProcess module functions
 #'
-#' @seealso For further information see the documentation of Rscript communication such as \code{\link{Rscript_Init}}.
-#'          Examples can be found in the vignette \emph{RProcess Module Functions}.
+#' @seealso Seome examples on how to use RProcess module functions are given in the vignette \emph{RProcess Module Functions}
+#'          (\code{vignette("RProcess_functions", package = "shinyTools")})
+#'
+#' @seealso In the R script communications functions such as \code{\link{Rscript_Init}} and \code{\link{Rscript_Fin}} should be used
+#'          to ensure correct communication between the R script and the shiny session.
 #'
 #' @param input      argument used by shiny session
 #' @param output     argument used by shiny session

@@ -21,12 +21,12 @@ RProcess(input, output, session, trigger, object, script, logFile = NULL,
 
 \item{script}{\code{chr} path to R batch script (name of file included)}
 
-\item{logFile}{\code{chr} or \code{NULL} (\code{NULL}) path of (desired) logging file (name included)}
+\item{logFile}{\code{chr} or \code{NULL} (\code{NULL}) path of logging file (name included). Will be created if it doesnt exist.}
 
 \item{sessionid}{\code{chr} or \code{NULL} (\code{NULL}) id for the session. Log entries will be prefixed with it.}
 
 \item{pwd}{\code{chr} (\code{getwd()}) path of R batch process working directory.
-That's where intermediate files will appear as well.}
+That's where intermediate files will be written as well.}
 
 \item{checkFun}{\code{chr} or \code{NULL} (\code{NULL}) if not \code{NULL} name of a function which can be used as a quality check for object
 right before it is handed ober to the R batch script}
@@ -47,16 +47,39 @@ right before it is handed ober to the R batch script}
 \description{
 This module starts and then observes a custom R script as a background process.
  The app stays responsive while the R script is running.
- The communication between the shiny session and the R script is done via a \code{*.status} file.
- Input and output are handed via a \code{*.rds} file.
+ It is a convenience function which combines \code{\link{RProcessStart}} and \code{\link{RProcessFinish}}
 }
 \details{
+The communication between the shiny session and the R script is done via a \code{*.status} file.
+ Input and output are handed over via a \code{*.rds} file.
+ The working directory of the process can be defined with \code{pwd}.
+ This is where the files are read and written as well.
+
+There is the option to let the R script write a log.
+ The desired log file can be given with \code{logFile}.
+ If several users use the app it might be useful to include a unique id with \code{sessionid}.
+ Every log entry will be appended with it.
+
+With \code{checkFun} a function name can be defined which will be used as quality control for \code{object}.
+This function is run before the R batch script is started.
+First argument of this function is the \code{object}.
+The function must either return \code{NULL} or a \code{chr} value. \code{NULL} means the input is valid.
+Thereby the module will start the R script.
+If the input should not be valid, the function must return a character value.
+This \code{chr} will be rendered as a error message for the user, and the modul will not start the R script.
+Additional arguments to this \code{checkFun} can be handed over with \code{addArgs}.
+
 To ensure that the communication between the shiny session and the R script is working properly, use \code{\link{Rscript_Init}}
  to start the script and \code{\link{Rscript_Fin}} to finish it.
+ These functions belong to the Rscript communication function which should be used in the R script for communication with the shiny session.
+ For examples see the vignette on \emph{RProcess Module Functions} (\code{vignette("RProcess_functions", package = "shinyTools")}).
 }
 \seealso{
-For further information see the documentation of Rscript communication such as \code{\link{Rscript_Init}}.
-         Examples can be found in the vignette \emph{RProcess Module Functions}.
+Seome examples on how to use RProcess module functions are given in the vignette \emph{RProcess Module Functions}
+         (\code{vignette("RProcess_functions", package = "shinyTools")})
+
+In the R script communications functions such as \code{\link{Rscript_Init}} and \code{\link{Rscript_Fin}} should be used
+         to ensure correct communication between the R script and the shiny session.
 
 Other RProcess module functions: \code{\link{RProcessFinishUI}},
   \code{\link{RProcessFinish}},

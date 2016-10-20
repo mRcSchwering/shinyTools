@@ -10,23 +10,21 @@ RProcessUI(id)
 \item{id}{\code{chr} id of this object for shiny session}
 }
 \value{
-chr HTML for creating ui elements.
+\code{chr} HTML for creating ui elements.
 }
 \description{
 UI part of a module which starts and observes a custom R script as background process.
-The UI of this module is a red text field which pops up as error message if something while starting the script or during the script went wrong.
+The UI of this module is a red text field which pops up as error message if something went wrong when starting the script or during script execution.
 }
 \details{
-This module starts and then observes a custom R script.
- The communication between the shiny session and the R script is done via a \code{*.status} file.
- Input and output are handed via a \code{*.rds} file.
-
-To ensure that the communication between the shiny session and the R script is working properly, use \code{\link{Rscript_Init}}
- to start the script and \code{\link{Rscript_Fin}} to finish it.
+For more details see the documentation of the corresponding \code{\link{RProcess}} function.
 }
 \seealso{
-For further information see the documentation of Rscript communication such as \code{\link{Rscript_Init}}.
-         Examples can be found in the vignette \emph{RProcess Module Functions}.
+Seome examples on how to use RProcess module functions are given in the vignette \emph{RProcess Module Functions}
+         (\code{vignette("RProcess_functions", package = "shinyTools")})
+
+In the R script communications functions such as \code{\link{Rscript_Init}} and \code{\link{Rscript_Fin}} should be used
+         to ensure correct communication between the R script and the shiny session.
 
 Other RProcess module functions: \code{\link{RProcessFinishUI}},
   \code{\link{RProcessFinish}},
